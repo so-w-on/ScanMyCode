@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "file_scan_report.h": "c",
+        "stdbool.h": "c"
+    },
+    "C_Cpp.default.compilerPath": ""
+}
