@@ -12,8 +12,9 @@ filetoscan is the file that the user wants to scan for the risks
 #include <string.h>
 #include <ctype.h>
 #include <stdbool.h>
-#include "scanner.h"
-#include "file_scan_report.h"
+#include "../include/scanner.h"
+#include "../include/file_scan_report.h"
+#include "../include/scan_matrix.h"
 
 int main(int argc, char *argv[]) {
     int option;
@@ -23,13 +24,13 @@ int main(int argc, char *argv[]) {
 
     while ((option = getopt(argc, argv, "cbm")) != -1) {
         switch (option) {
-            case 't':
+            case 'c':
                 c_flag = 1;
                 break;
             case 'b':
                 b_flag = 1;
                 break;
-            case 'v':
+            case 'm':
                 m_flag = 1;
                 break;
             case '?':
@@ -37,7 +38,6 @@ int main(int argc, char *argv[]) {
                 fprintf(stderr, "Usage: %s [-c] [-b] [-m] filetoscan\n", argv[0]);
                 exit(EXIT_FAILURE);
             default:
-                // Handle other options if needed
                 break;
         }
     }
@@ -48,22 +48,23 @@ int main(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
 
-    char *file_name = argv[optind]; // The file name to scan
-
-
+    char *user_file = argv[optind]; // The file name to scan
 
     if (c_flag == 1) {
         printf("Checking for command injection risk...\n");
-        command_injection_check(file_name);
     }
     if (b_flag == 1) {
         printf("Checking for buffer overflow risk...\n");
-        buffer_overflow_check(file_name);
     }
     if (m_flag == 1) {
         printf("Checking for memory corruption risk...\n");
-        memory_corruption_check(file_name);
     }
+
+
+    //TODO : actually make use of these flags
+
+    ScanMatrix *scanmatrix = scanner_init(user_file);
+    init_reporting(user_file, scanmatrix);
 
     return 0;
 }

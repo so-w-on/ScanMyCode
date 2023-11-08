@@ -1,7 +1,17 @@
 {
     "files.associations": {
         "file_scan_report.h": "c",
-        "stdbool.h": "c"
+        "stdbool.h": "c",
+        "cstdlib": "c",
+        "string.h": "c",
+        "scanner.h": "c"
     },
-    "C_Cpp.default.compilerPath": ""
+    "C_Cpp.default.compilerPath": "",
+    "makefile.launchConfigurations": [
+        {
+            "cwd": "/home/kali/GitRepos",
+            "binaryPath": "/home/kali/GitRepos/scanthycode",
+            "binaryArgs": []
+        }
+    ]
 }
