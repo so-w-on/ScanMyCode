@@ -1,16 +1,3 @@
-/* This file defines the initialization of the reporting module.
-This module supposedly prepares a text file :user_given_file_scan_report.txt; replacing user_given_file with the name of the file that the user wants to scan.
-The title of the txt file is "Report on vulnerability risk scan"
-Then for each vulnerability scan specified by the user, the report makes a paragraph that is organised as follows:
-Vulnerability : The name of the vulnerability
-Potential vulnerable lines: list of vulnerable lines detected by the scanner
-
-To do this we need to give the scanner a pointer to an array pr vulnerability that will be filled by 
-the potentially vulnerable lines and later used to fill the above mentioned text file*/
-
-/*After the tests, the possible vulnerabilities are listed along with some links to good practices
-to avoid such vulnerabilities.*/
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -19,10 +6,21 @@ to avoid such vulnerabilities.*/
 #include "scanner.h"
 #include "scan_matrix.h"
 
+#define ANSI_RED     "\x1b[31m"
+#define ANSI_BOLD_RED "\x1b[1;31m"
+#define ANSI_RESET   "\x1b[0m"
+#define ANSI_BLUE    "\x1b[34m"
+
 
 int init_reporting(char *file_name, ScanMatrix *scanmatrix){
+    const char* reporttitle =
+    " ___                   _                         _                   _    _ _ _ _              _    _                            \n"  
+    "| _ \\___ _ __  ___ _ _| |_   ___ _ _   __ ___  _| |_ _  ___ _ _ __ _| |__(_) (_) |_ _  _   _ _(_)__| |__  ___ __ __ _ _ _         \n"
+    "|   / -_) '_ \\/ _ \\ '_|  _| / _ \\ ' \\  \\ V / || | | ' \\/ -_) '_/ _` | '_ \\ | | |  _| || | | '_| (_-< / / (_-</ _/ _` | ' \\        \n"
+    "|_|_\\___| .__/\\___/_|  \\__| \\___/_||_|  \\_/ \\_,_|_|_||_\\___|_| \\__,_|_.__/_|_|_|\\__|\\_, | |_| |_/__/_\\_\\ /__/\\__\\__,_|_||_|       \n"
+    "        |_|                                                                         |__/                                           \n\n";
 
-    printf("Initializing the report file...\n");
+    // printf("Initializing the report file...\n");
     FILE *report_fp;
     // open the file in write mode and name it after the file that the user wants to scan + _scan_report.txt
     char *report_file_name = strcat(file_name, "_scan_report.txt");
@@ -31,18 +29,16 @@ int init_reporting(char *file_name, ScanMatrix *scanmatrix){
     if (report_fp == NULL)
         exit(EXIT_FAILURE);
 
-    // Write the Title of the report
-    fprintf(report_fp,"**Report on vulnerability risk scan**\n\n");
-    fprintf(report_fp,"*Brought to you by: so-w-on*\n\n\n");
+    fprintf(report_fp, reporttitle);
     
-    fprintf(report_fp,"\n\n*Command injection risk report*\n");
+    fprintf(report_fp,ANSI_BOLD_RED "\n|-||-||-| Command injection risk report |-||-||-| \n\n" ANSI_RESET);
 
     int count_c = 0;
     for (int i = 0; i<scanmatrix->rows; i++)
     {
         if (scanmatrix->matrix[0][i] == 1)
         {
-            fprintf(report_fp,"Line %d is vulnerable to command injection risk\n", i);
+            fprintf(report_fp,ANSI_RED "Line %d " ANSI_RESET "is vulnerable to command injection risk\n", i+1);
             count_c++;
         }
     }
@@ -54,16 +50,16 @@ int init_reporting(char *file_name, ScanMatrix *scanmatrix){
     {
         fprintf(report_fp,"Number of lines vulnerable to command injection risk: %d\n", count_c);
         fprintf(report_fp,"Links to good practices to avoid command injection risk:\n");
-        fprintf(report_fp,"https://owasp.org/www-community/attacks/Command_Injection\n");            
+        fprintf(report_fp,ANSI_BLUE"https://owasp.org/www-community/attacks/Command_Injection\n"ANSI_RESET);            
     }
     
-    fprintf(report_fp,"\n\n*Buffer overflow risk report*\n");
+    fprintf(report_fp, ANSI_BOLD_RED "\n|-||-||-| Buffer overflow risk report |-||-||-| \n\n" ANSI_RESET);
     int count_b = 0;
     for (int i = 0; i<scanmatrix->rows; i++)
     {
         if (scanmatrix->matrix[1][i] == 1)
         {
-            fprintf(report_fp,"Line %d is vulnerable to buffer overflow risk\n", i);
+            fprintf(report_fp,ANSI_RED "Line %d " ANSI_RESET "is vulnerable to buffer overflow risk\n", i+1);
             count_b++;
         }
     }
@@ -75,16 +71,16 @@ int init_reporting(char *file_name, ScanMatrix *scanmatrix){
     {
         fprintf(report_fp,"Number of lines vulnerable to buffer overflow risk: %d\n", count_b);
         fprintf(report_fp,"Links to good practices to avoid buffer overflow risk:\n");
-        fprintf(report_fp,"https://owasp.org/www-community/vulnerabilities/Buffer_Overflow\n");            
+        fprintf(report_fp,ANSI_BLUE"https://owasp.org/www-community/vulnerabilities/Buffer_Overflow\n"ANSI_RESET);            
     }
 
-    fprintf(report_fp,"\n\n*Memory corruption risk report*\n");
+    fprintf(report_fp, ANSI_BOLD_RED "\n|-||-||-| Memory corruption risk report  |-||-||-| \n\n" ANSI_RESET);
     int count_m = 0;
     for (int i = 0; i<scanmatrix->rows; i++)
     {
         if (scanmatrix->matrix[2][i]== 1)
         {
-            fprintf(report_fp,"Line %d is vulnerable to memory corruption risk\n", i);
+            fprintf(report_fp,ANSI_RED "Line %d " ANSI_RESET "is vulnerable to memory corruption risk\n", i+1);
 
             count_m++;
         }
@@ -96,7 +92,7 @@ int init_reporting(char *file_name, ScanMatrix *scanmatrix){
     else
     {
         fprintf(report_fp,"Number of lines vulnerable to memory corruption risk: %d\n", count_m);
-        fprintf(report_fp,"Links to good practices to avoid memory corruption risk:\n");
+        // fprintf(report_fp,ANSI_BLUE "Links to good practices to avoid memory corruption risk:\n"ANSI_RESET);
         fprintf(report_fp,"\n");            
     }
     freeMatrix(scanmatrix);

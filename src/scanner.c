@@ -12,8 +12,6 @@ Vulnerable third-party libraries, Race conditions, Concurrency issues
 #include "file_scan_report.h"
 #include "scan_matrix.h"
 
-// Function to initialize scanner
-//scanner_init will return a matrix that will be passed to the reporting module
 // The matrix will be filled with 1s and 0s depending on the presence of the vulnerability in the file
 // The matrix will be of size 3xN where N is the number of lines in the file
 // The first row will be for command injection risk
@@ -22,7 +20,7 @@ Vulnerable third-party libraries, Race conditions, Concurrency issues
 
 ScanMatrix *scanner_init(char *file_name)
 {
-    printf("Initializing scanner...\n");
+    // printf("Initializing scanner...\n");
     FILE *fp;
     char *line = NULL;
     size_t len = 0;
@@ -33,16 +31,12 @@ ScanMatrix *scanner_init(char *file_name)
     int columns = 3; 
     char ch;
 
-    // Define one array that contains all the patterns to be searched for in the file for command injection risk
     char *command_injection_strings[]= {"system", "popen", "exec", "execve", "execl", "execlp", "execle", "execv", "execvp", "execvpe", "eval", "call", "shell_exec", "proc_open", "ShellExecute"};
     int n_cmd_injections = sizeof(command_injection_strings) / sizeof(command_injection_strings[0]);
 
-    // Define one array that contains all the patterns to be searched for in the file for buffer overflow risk
-    // This array contains strings that are 
     char *buffer_overflow_strings[]= {"gets", "scanf", "strcpy", "strcat", "sprintf", "vsprintf","snprintf", "syslog"};
     int n_buffer_overflows = sizeof(buffer_overflow_strings) / sizeof(buffer_overflow_strings[0]);
 
-    // Define one array that contains all the patterns to be searched for in the file for memory corruption risk
     char *memory_corruption_strings[]= {"memcpy", "memmove", "memset"};
     int n_memory_corruption = sizeof(memory_corruption_strings) / sizeof(memory_corruption_strings[0]);
 
@@ -57,14 +51,12 @@ ScanMatrix *scanner_init(char *file_name)
     if (fp == NULL)
         exit(EXIT_FAILURE);
 
-    // Count number of lines in file
     while ((ch = fgetc(fp)) != EOF) {
         if (ch == '\n') {
             rows++;
         }
     }
-    printf("Initializing matrix...\n");
-    // init Scanmatrix
+    // printf("Initializing matrix...\n");
     scanmatrix = (ScanMatrix *)malloc(sizeof(ScanMatrix));
     if (scanmatrix == NULL) 
     {
@@ -73,7 +65,7 @@ ScanMatrix *scanner_init(char *file_name)
     {
         initializeMatrix(scanmatrix, rows, columns);
     }
-    printf("Done Initializing matrix...\n");
+    // printf("Done Initializing matrix...\n");
     
     rewind(fp);
     //use the other functions
@@ -85,7 +77,7 @@ ScanMatrix *scanner_init(char *file_name)
     }
 
     fclose(fp);
-    printf("file closed\n");
+    // printf("file closed\n");
     if (line)
         free(line);
     return scanmatrix;
@@ -96,7 +88,6 @@ int command_injection_check(char *line, char *command_injection_strings[], int n
 {
     for (int i = 0; i < n_cmd_injections; i++){
         if (strstr(line, command_injection_strings[i]) != NULL){
-            // printf("Command injection risk detected in this line.\n");
             return 1;
         }
     }
@@ -104,13 +95,10 @@ int command_injection_check(char *line, char *command_injection_strings[], int n
 }
 
 // Function to check for buffer overflow risk
-// It goes through the file looking for function that may be exploited by the user if not proper measures are taken into account.
-// These functions are the one known to be vulnerable to the following: Stack or Heap overflow and format strings.
 int buffer_overflow_check(char *line, char *buffer_overflow_strings[], int n_buffer_overflows)
 {
     for (int i = 0; i < n_buffer_overflows; i++){
         if (strstr(line, buffer_overflow_strings[i]) != NULL){
-            // printf("Buffer overflow risk detected in the file.\n");
             return 1;
         }
     }
@@ -122,7 +110,6 @@ int memory_corruption_check(char *line, char* memory_corruption_strings[], int n
 {
     for (int i = 0; i < n_memory_corruption; i++){
         if (strstr(line, memory_corruption_strings[i]) != NULL){
-            // printf("Memory corruption risk detected in the file.\n");
             return 1;
         }
     }

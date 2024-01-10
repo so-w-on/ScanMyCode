@@ -3,6 +3,7 @@ b is to check for buffer overflow risk using the function from scanner.c
 m is to check for memory corruption risk using the function from scanner.c
 c is to check for command injection using the function from scanner.c
 filetoscan is the file that the user wants to scan for the risks
+TODO : maybe teh -bmc flags aren't that useful?
 */
 #include <stdio.h>
 #include <stdlib.h>
@@ -15,6 +16,21 @@ filetoscan is the file that the user wants to scan for the risks
 #include "../include/scanner.h"
 #include "../include/file_scan_report.h"
 #include "../include/scan_matrix.h"
+
+const char* startupAsciiTitle = 
+"   _____                   _______ _              _____          _          \n"
+"  / ____|                 |__   __| |            / ____|        | |         \n" 
+" | (___   ___ __ _ _ __      | |  | |__  _   _  | |     ___   __| | ___     \n" 
+"  \\___ \\ / __/ _` | '_ \\     | |  | '_ \\| | | | | |    / _ \\ / _` |/ _ \\     \n" 
+"  ____) | (_| (_| | | | |    | |  | | | | |_| | | |___| (_) | (_| |  __/     \n" 
+" |_____/ \\___\\__,_|_| |_|    |_|  |_| |_|\\__, |  \\_____\\___/ \\__,_|\\___|      \n" 
+"                                          __/ |                               \n" 
+"                                         |___/                                \n" 
+"       Mouna - github.com/so-w-on - Scan Thy Code                              \n\n";
+
+void printStartupAsciiTitle() {
+    printf("%s\n", startupAsciiTitle);
+}
 
 int main(int argc, char *argv[]) {
     int option;
@@ -47,6 +63,7 @@ int main(int argc, char *argv[]) {
         fprintf(stderr, "Missing file name.\n");
         exit(EXIT_FAILURE);
     }
+    printStartupAsciiTitle();
 
     char *user_file = argv[optind]; // The file name to scan
 

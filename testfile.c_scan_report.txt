@@ -1,0 +1,29 @@
+ ___                   _                         _                   _    _ _ _ _              _    _                            
+| _ \___ _ __  ___ _ _| |_   ___ _ _   __ ___  _| |_ _  ___ _ _ __ _| |__(_) (_) |_ _  _   _ _(_)__| |__  ___ __ __ _ _ _         
+|   / -_) '_ \/ _ \ '_|  _| / _ \ ' \  \ V / || | | ' \/ -_) '_/ _` | '_ \ | | |  _| || | | '_| (_-< / / (_-</ _/ _` | ' \        
+|_|_\___| .__/\___/_|  \__| \___/_||_|  \_/ \_,_|_|_||_\___|_| \__,_|_.__/_|_|_|\__|\_, | |_| |_/__/_\_\ /__/\__\__,_|_||_|       
+        |_|                                                                         |__/                                           
+
+[1;31m
+|-||-||-| Command injection risk report |-||-||-| 
+
+[0m[31mLine 9 [0mis vulnerable to command injection risk
+[31mLine 11 [0mis vulnerable to command injection risk
+Number of lines vulnerable to command injection risk: 2
+Links to good practices to avoid command injection risk:
+[34mhttps://owasp.org/www-community/attacks/Command_Injection
+[0m[1;31m
+|-||-||-| Buffer overflow risk report |-||-||-| 
+
+[0m[31mLine 14 [0mis vulnerable to buffer overflow risk
+[31mLine 32 [0mis vulnerable to buffer overflow risk
+Number of lines vulnerable to buffer overflow risk: 2
+Links to good practices to avoid buffer overflow risk:
+[34mhttps://owasp.org/www-community/vulnerabilities/Buffer_Overflow
+[0m[1;31m
+|-||-||-| Memory corruption risk report  |-||-||-| 
+
+[0m[31mLine 22 [0mis vulnerable to memory corruption risk
+[31mLine 26 [0mis vulnerable to memory corruption risk
+Number of lines vulnerable to memory corruption risk: 2
+
